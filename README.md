@@ -3,7 +3,7 @@
 ### 快速开始
 
 ```js
-git clone git@github.com:LeesinChen/fizz.git
+git clone
 cd fizz
 ```
 
@@ -14,7 +14,7 @@ dev：
 npm install
 npm run dev
 ```
-open http://localhost:8000/
+open http://localhost:3000/
 
 prd:
 ```js
