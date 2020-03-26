@@ -19,70 +19,70 @@ const dataSource = [
     name: '张三',
     gender: 1,
     number: 'A001',
-    sNumber: '11280098'
+    sNumber: '12345'
   },
   {
     id: 1,
     name: '慕容阿呆',
     gender: 2,
     number: 'A001',
-    sNumber: '11280098'
+    sNumber: '12345'
   },
   {
     id: 1,
     name: '刘能',
     gender: 1,
     number: 'A001',
-    sNumber: '11280098'
+    sNumber: '12345'
   },
   {
     id: 1,
     name: '王小二',
     gender: 2,
     number: 'A001',
-    sNumber: '11280098'
+    sNumber: '12345'
   },
   {
     id: 1,
     name: '张三',
     gender: 2,
     number: 'A001',
-    sNumber: '11280098'
+    sNumber: '12345'
   },
   {
     id: 1,
     name: '张三',
     gender: 1,
     number: 'A001',
-    sNumber: '11280098'
+    sNumber: '12345'
   },
   {
     id: 1,
     name: '张三',
     gender: 1,
     number: 'A001',
-    sNumber: '11280098'
+    sNumber: '12345'
   },
   {
     id: 1,
     name: '张三',
     gender: 1,
     number: 'A001',
-    sNumber: '11280098'
+    sNumber: '12345'
   },
   {
     id: 1,
     name: '张三',
     gender: 1,
     number: 'A001',
-    sNumber: '11280098'
+    sNumber: '12345'
   },
   {
     id: 1,
     name: '张三',
     gender: 1,
     number: 'A001',
-    sNumber: '11280098'
+    sNumber: '12345'
   },
 ]
 
