@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './header.less';
-import {Button, Input, Row, Col, Icon, Radio, Form, Select, Badge, Checkbox} from 'antd';
+import {Button, Input, Row, Col, Icon, Radio, Form, Select, Badge, Checkbox, Tag} from 'antd';
 
 const {Search} = Input;
 
@@ -9,7 +9,8 @@ const formItemLayout = {
   wrapperCol: { span: 17 },
 };
 
-const View = () => {
+const View = props => {
+  const {refresh} = props
   return (
     <div className={styles.header}>
       <div>
@@ -40,41 +41,29 @@ const View = () => {
           }}
         />
 
-        <Checkbox
+        <Radio.Group
+          defaultValue={1}
           style={{
             marginRight: 20
           }}
-        >直接显示人员信息</Checkbox>
-
-        <Radio.Group
-          defaultValue={1}
         >
-          <Radio value={1}>全部显示</Radio>
-          <Radio value={2}>隐藏</Radio>
-          <Radio value={3}>显示</Radio>
+          <Radio.Button value={1}>全部显示</Radio.Button>
+          <Radio.Button value={2}>隐藏</Radio.Button>
+          <Radio.Button value={3}>显示</Radio.Button>
         </Radio.Group>
+
+        <Checkbox>直接显示人员信息</Checkbox>
 
       </div>
       <div style={{textAlign: 'right'}}>
-        <Badge
-          status="processing"
-          style={{
-            marginRight: 20
-          }}
-          text={
-            <span>正在检查</span>
-          }
-        />
 
-        <Badge
-          status="warning"
-          style={{
-            marginRight: 20
-          }}
-          text={
-            <span>老年人</span>
-          }
-        />
+        <Tag
+          color="#f50"
+        >老年人</Tag>
+        <Tag
+          color="#2db7f5"
+          style={{marginRight: 20}}
+        >检查中</Tag>
 
         <span
           style={{
@@ -96,6 +85,7 @@ const View = () => {
         <Button
           type="primary"
           style={{float: 'right'}}
+          onClick={refresh}
         ><Icon type="redo" />刷新</Button>
       </div>
 

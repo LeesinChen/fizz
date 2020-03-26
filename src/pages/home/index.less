@@ -1,0 +1,34 @@
+.tableWrapper{
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+  padding: 10px;
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  .item{
+    width: 20%;
+    min-width: 360px;
+    height: 350px;
+    padding: 10px;
+  }
+  .em{
+    width: 20%;
+    min-width: 360px;
+  }
+}
+.topBar{
+  width: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+  padding: 0 20px;
+  margin-top: 20px;
+}
+
+@media screen and (max-width: 1800px){
+  .tableWrapper{
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+  }
+}
