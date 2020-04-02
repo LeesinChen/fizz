@@ -17,7 +17,6 @@ const View = (
   location
 }
 ) => {
-
   const {
     total, // 所有科室检查总人数
     checkedTotal, // 所有科室已检查总人数
@@ -32,6 +31,9 @@ const View = (
     userInfo,
     categoryId,
     searchId,
+    filterDataSource,
+    unCheckedCategory=[],
+    checkedCategory=[]
   } = homeModel
 
   const search = (keyword) => {
@@ -65,6 +67,23 @@ const View = (
   const userMove = (payload) => {
     dispatch({
       type: 'homeModel/move',
+      payload
+    })
+  }
+
+  const setFilterData = (data, id) => {
+    filterDataSource[id] = data
+    dispatch({
+      type: 'homeModel/updateState',
+      payload: {
+        filterDataSource
+      }
+    })
+  }
+
+  const getUserInfo = (payload) => {
+    dispatch({
+      type: 'homeModel/getUserInfo',
       payload
     })
   }
@@ -107,6 +126,8 @@ const View = (
         </div>
         <SetModal
           visible={visible}
+          unCheckedCategory={unCheckedCategory}
+          checkedCategory={checkedCategory}
           onCancel={() => {
             dispatch({
               type: 'homeModel/updateState',
@@ -134,6 +155,11 @@ const View = (
                 dataSource={d.list}
                 personSet={personSet}
                 userMove={userMove}
+                filterDataSource={filterDataSource[d.id]}
+                getUserInfo={getUserInfo}
+                updateData={(data) => {
+                  setFilterData(data, d.id)
+                }}
               />
             </div>
           )

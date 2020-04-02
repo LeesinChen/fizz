@@ -1,6 +1,6 @@
 export default {
-  'GET /fizz/v1/list': {
-    code: 1, // 接口状态 0失败   1成功   2无权限
+  'GET /cdn/zndzgzt/selectAll': {
+    code: 0, // 接口状态 0失败   1成功   2无权限
     total: 100, // 所有科室检查总人数
     checkedTotal: 77, // 所有科室已检查总人数
     checkedMan: 47, // 所有科室已检查男性
@@ -249,7 +249,7 @@ export default {
     ]
   },
   'GET /fizz/v1/find': {
-    code: 1, // 接口状态 0失败   1成功   2无权限
+    code: 0, // 接口状态 0失败   1成功   2无权限
     data: {
       id: 3,  // 用户id
       name: '李冰冰', // 用户名称
@@ -258,5 +258,57 @@ export default {
       number: 123, // 流水号
       categoryId: 1, // 所在科室id
     },
-  }
+  },
+  'POST /cdn/zndzgzt/changeRy': {
+    code: 0, // 接口状态 0失败   1成功   2无权限
+  },
+  'GET /cdn/zndzgzt/selectZyRyDl': {
+    code: 0, // 接口状态 0失败   1成功   2无权限
+    data: {
+      checkedCategory: [
+        {
+          id: 1, // 科室id
+          name: '妇科' // 科室名字
+        },
+        {
+          id: 2,
+          name: 'B超'
+        }
+      ],
+      unCheckedCategory: [
+        {
+          id: 3, // 科室id
+          name: '耳鼻喉科' // 科室名字
+        },
+        {
+          id: 4,
+          name: '牙科'
+        },
+        {
+          id: 5, // 科室id
+          name: '耳鼻喉科' // 科室名字
+        },
+        {
+          id: 6,
+          name: '牙科'
+        },
+        {
+          id: 7, // 科室id
+          name: '耳鼻喉科' // 科室名字
+        },
+        {
+          id: 8,
+          name: '牙科'
+        },
+        {
+          id: 9, // 科室id
+          name: '耳鼻喉科' // 科室名字
+        },
+        {
+          id: 10,
+          name: '牙科'
+        }
+      ]
+    }
+  },
 }

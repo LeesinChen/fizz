@@ -9,6 +9,7 @@ const View = props => {
   const {
     title,
     dataSource,
+    filterDataSource=[],
     total,
     spareTotal,
     checkedTotal,
@@ -19,11 +20,12 @@ const View = props => {
     personSet,
     categoryId,
     searchId,
+    updateData,
+    getUserInfo,
     id
   } = props
 
-  const [filterData, updateData] = useState(dataSource)
-  const len = filterData.length
+  const len = filterDataSource.length
 
   const menuClick = (key, data, index) => {
 
@@ -54,6 +56,7 @@ const View = props => {
         personSet(payload);
         break;
       case 'move':
+        getUserInfo({number: data.number});
         break;
     }
   }
@@ -126,13 +129,6 @@ const View = props => {
       <div className={styles.title}>
         <div>
           <span className={styles.titleText}>{title}</span>
-          {/*<span>*/}
-            {/*<Badge status="processing" />*/}
-            {/*<Select size="small" defaultValue={1}>*/}
-              {/*<Select.Option value={1}>在线</Select.Option>*/}
-              {/*<Select.Option value={2}>离线</Select.Option>*/}
-            {/*</Select>*/}
-          {/*</span>*/}
         </div>
         <div className={styles.settingBar}>
           <Radio.Group
@@ -144,26 +140,8 @@ const View = props => {
             <Radio.Button value={2}>女</Radio.Button>
             <Radio.Button value={0}>不限</Radio.Button>
           </Radio.Group>
-          {/*<Icon className={styles.icon} type="unlock" theme="filled" />*/}
-          {/*<Icon className={styles.icon} type="eye-invisible" theme="filled" />*/}
-          {/*<Icon className={styles.icon} type="setting" theme="filled" />*/}
         </div>
       </div>
-      {/*<div className={styles.statusBar}>*/}
-        {/*<div>*/}
-          {/*<Radio.Group defaultValue="a" size="small">*/}
-            {/*<Radio.Button value="a">开启</Radio.Button>*/}
-            {/*<Radio.Button value="b">关闭</Radio.Button>*/}
-          {/*</Radio.Group>*/}
-        {/*</div>*/}
-        {/*<div>*/}
-          {/*<Radio.Group defaultValue="c" size="small">*/}
-            {/*<Radio.Button value="a">男</Radio.Button>*/}
-            {/*<Radio.Button value="b">女</Radio.Button>*/}
-            {/*<Radio.Button value="c">不限</Radio.Button>*/}
-          {/*</Radio.Group>*/}
-        {/*</div>*/}
-      {/*</div>*/}
       <div className={styles.info}>
         <Progress
           text={spareTotal > 0 ? `排队人数：${spareTotal}（男${spareMan} 女${spareWoman}）` : "排队人数：0"}
@@ -174,7 +152,7 @@ const View = props => {
           size="small"
           bordered={false}
           columns={columns}
-          dataSource={filterData}
+          dataSource={filterDataSource}
           pagination={false}
           rowKey={(_, i) => i}
           rowClassName={(d, i) => {

@@ -7,7 +7,8 @@ import router from 'umi/router';
 const {
   home_list,
   find_list,
-  user_move
+  user_move,
+  user_info
 } = api
 
 const _service = registerServer({
@@ -22,6 +23,10 @@ const _service = registerServer({
   move: {
     url: user_move,
     method: 'post'
+  },
+  getUserInfo: {
+    url: user_info,
+    method: 'get'
   }
 }, request)
 
@@ -37,6 +42,9 @@ const Model = {
     spareWoman: 0, // 所有科室未检查男性
     list: [],
     alert: false,
+    filterDataSource: {},
+    unCheckedCategory: [],
+    checkedCategory: []
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -50,9 +58,28 @@ const Model = {
     }
   },
   effects: {
+    *getUserInfo({ payload = {} }, { call, put }) {
+      const res = yield call(_service.getUserInfo, payload);
+      if (res.code == 0 ) {
+        const data = res.data
+        yield put({
+          type: 'updateState',
+          payload: {
+            visible: true,
+            userInfo: '',
+            unCheckedCategory: data.unCheckedCategory,
+            checkedCategory: data.checkedCategory
+          }
+        })
+      } else {
+        throw {
+          errorMessage: res.errorMessage
+        }
+      }
+    },
     *move({ payload = {} }, { call, put }) {
       const res = yield call(_service.move, payload);
-      if (res.code == 1 ) {
+      if (res.code == 0 ) {
         notification.success({
           message: "更新成功！",
           duration: 1,
@@ -68,7 +95,7 @@ const Model = {
     },
     *find({ payload = {} }, { call, put }) {
       const res = yield call(_service.find, payload);
-      if (res.code == 1 ) {
+      if (res.code == 0 ) {
         yield put({
           type: 'updateState',
           payload: {
@@ -86,7 +113,18 @@ const Model = {
     },
     *getList({ payload = {} }, { call, put }) {
       const res = yield call(_service.getList, payload);
-      if (res.code == 1 ) {
+      if (res.code == 0 ) {
+
+        const categoryList = res.data.filter(d => d.id)
+
+        let filterDataSource = {}
+
+        console.log('categoryList', categoryList)
+
+        categoryList.forEach(d => {
+          filterDataSource[d.id] = d.list
+        })
+
         yield put({
           type: 'updateState',
           payload: {
@@ -97,7 +135,8 @@ const Model = {
             checkedWoman: +res.checkedWoman, // 所有科室已检查女性
             spareMan: +res.spareMan, // 所有科室未检查男性
             spareWoman: +res.spareWoman, // 所有科室未检查男性
-            list: res.data.filter(d => d.id)
+            list: categoryList,
+            filterDataSource,
           }
         })
       } else {
