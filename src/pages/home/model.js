@@ -8,7 +8,8 @@ const {
   home_list,
   find_list,
   user_move,
-  user_info
+  user_info,
+  save_category
 } = api
 
 const _service = registerServer({
@@ -27,6 +28,10 @@ const _service = registerServer({
   getUserInfo: {
     url: user_info,
     method: 'get'
+  },
+  saveCategory: {
+    url: save_category,
+    method: 'post'
   }
 }, request)
 
@@ -44,7 +49,8 @@ const Model = {
     alert: false,
     filterDataSource: {},
     unCheckedCategory: [],
-    checkedCategory: []
+    checkedCategory: [],
+    modalUserInfo: {}
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -58,28 +64,9 @@ const Model = {
     }
   },
   effects: {
-    *getUserInfo({ payload = {} }, { call, put }) {
-      const res = yield call(_service.getUserInfo, payload);
-      if (res.code == 0 ) {
-        const data = res.data
-        yield put({
-          type: 'updateState',
-          payload: {
-            visible: true,
-            userInfo: '',
-            unCheckedCategory: data.unCheckedCategory,
-            checkedCategory: data.checkedCategory
-          }
-        })
-      } else {
-        throw {
-          errorMessage: res.errorMessage
-        }
-      }
-    },
-    *move({ payload = {} }, { call, put }) {
-      const res = yield call(_service.move, payload);
-      if (res.code == 0 ) {
+    *saveCategory({ payload = {} }, { call, put }) {
+      const {code, details, value} = yield call(_service.saveCategory, payload);
+      if (code == 0 ) {
         notification.success({
           message: "更新成功！",
           duration: 1,
@@ -89,37 +76,73 @@ const Model = {
         })
       } else {
         throw {
-          errorMessage: res.errorMessage
+          errorMessage: value
         }
       }
     },
-    *find({ payload = {} }, { call, put }) {
-      const res = yield call(_service.find, payload);
-      if (res.code == 0 ) {
+    *getUserInfo({ payload = {} }, { call, put }) {
+      const {code, details, value} = yield call(_service.getUserInfo, payload);
+      if (code == 0 ) {
+        const data = details ? details.data : {
+          unCheckedCategory: [],
+          checkedCategory: [],
+          deaufultCategory: {},
+        }
         yield put({
           type: 'updateState',
           payload: {
-            userInfo: res.data,
-            alert: true,
-            categoryId: res.data.categoryId,
-            searchId: res.data.id
+            visible: true,
+            unCheckedCategory: data.unCheckedCategory,
+            checkedCategory: data.checkedCategory,
+            defaultCategoryId: data.deaufultCategory.id
           }
         })
       } else {
         throw {
-          errorMessage: res.errorMessage
+          errorMessage: value
+        }
+      }
+    },
+    *move({ payload = {} }, { call, put }) {
+      const {code, details, value} = yield call(_service.move, payload);
+      if (code == 0 ) {
+        notification.success({
+          message: "更新成功！",
+          duration: 1,
+        })
+        router.replace({
+          pathname: '/home',
+        })
+      } else {
+        throw {
+          errorMessage: value
+        }
+      }
+    },
+    *find({ payload = {} }, { call, put }) {
+      const {code, details, value} = yield call(_service.find, payload);
+      if (code == 0 ) {
+        yield put({
+          type: 'updateState',
+          payload: {
+            userInfo: details,
+            alert: true,
+            categoryId: details.queueCode,
+            searchId: details.patientNum
+          }
+        })
+      } else {
+        throw {
+          errorMessage: value
         }
       }
     },
     *getList({ payload = {} }, { call, put }) {
-      const res = yield call(_service.getList, payload);
-      if (res.code == 0 ) {
-
-        const categoryList = res.data.filter(d => d.id)
+      const {code, details, value} = yield call(_service.getList, payload);
+      if (code == 0 ) {
+        const categoryList = details.data ? details.data.filter(d => d.id) : []
 
         let filterDataSource = {}
-
-        console.log('categoryList', categoryList)
 
         categoryList.forEach(d => {
           filterDataSource[d.id] = d.list
@@ -128,20 +151,20 @@ const Model = {
         yield put({
           type: 'updateState',
           payload: {
-            total: +res.total, // 所有科室检查总人数
-            spareTotal: +res.spareTotal,
-            checkedTotal: +res.checkedTotal, // 所有科室已检查总人数
-            checkedMan: +res.checkedMan, // 所有科室已检查男性
-            checkedWoman: +res.checkedWoman, // 所有科室已检查女性
-            spareMan: +res.spareMan, // 所有科室未检查男性
-            spareWoman: +res.spareWoman, // 所有科室未检查男性
+            total: +details.total, // 所有科室检查总人数
+            spareTotal: +details.spareTotal,
+            checkedTotal: +details.checkedTotal, // 所有科室已检查总人数
+            checkedMan: +details.checkedMan, // 所有科室已检查男性
+            checkedWoman: +details.checkedWoman, // 所有科室已检查女性
+            spareMan: +details.spareMan, // 所有科室未检查男性
+            spareWoman: +details.spareWoman, // 所有科室未检查男性
             list: categoryList,
             filterDataSource,
           }
         })
       } else {
         throw {
-          errorMessage: res.errorMessage
+          errorMessage: value
         }
       }
     },

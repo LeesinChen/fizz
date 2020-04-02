@@ -33,7 +33,9 @@ const View = (
     searchId,
     filterDataSource,
     unCheckedCategory=[],
-    checkedCategory=[]
+    checkedCategory=[],
+    defaultCategoryId,
+    modalUserInfo,
   } = homeModel
 
   const search = (keyword) => {
@@ -81,10 +83,16 @@ const View = (
     })
   }
 
-  const getUserInfo = (payload) => {
+  const getUserInfo = (payload, modalUserInfo) => {
     dispatch({
       type: 'homeModel/getUserInfo',
       payload
+    })
+    dispatch({
+      type: 'homeModel/updateState',
+      payload: {
+        modalUserInfo
+      }
     })
   }
 
@@ -102,7 +110,7 @@ const View = (
             description={
               <div>
                 <span>姓名：{userInfo.name}</span>
-                <span>所在科室：{userInfo.id}</span>
+                <span>所在科室：{userInfo.queueName}</span>
               </div>
             }
             type="info"
@@ -126,8 +134,23 @@ const View = (
         </div>
         <SetModal
           visible={visible}
+          modalUserInfo={modalUserInfo}
           unCheckedCategory={unCheckedCategory}
           checkedCategory={checkedCategory}
+          defaultCategoryId={defaultCategoryId}
+          onSubmit={(payload) => {
+            dispatch({
+              type: 'homeModel/saveCategory',
+              payload: payload
+            });
+            dispatch({
+              type: 'homeModel/updateState',
+              payload: {
+                visible: false,
+                modalUserInfo: {}
+              }
+            });
+          }}
           onCancel={() => {
             dispatch({
               type: 'homeModel/updateState',

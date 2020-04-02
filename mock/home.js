@@ -1,5 +1,5 @@
 export default {
-  'GET /cdn/zndzgzt/selectAll': {
+  'GET /1cdn/zndzgzt/selectAll': {
     code: 0, // 接口状态 0失败   1成功   2无权限
     total: 100, // 所有科室检查总人数
     checkedTotal: 77, // 所有科室已检查总人数
@@ -248,7 +248,7 @@ export default {
       },
     ]
   },
-  'GET /fizz/v1/find': {
+  'GET /1fizz/v1/find': {
     code: 0, // 接口状态 0失败   1成功   2无权限
     data: {
       id: 3,  // 用户id
@@ -259,10 +259,10 @@ export default {
       categoryId: 1, // 所在科室id
     },
   },
-  'POST /cdn/zndzgzt/changeRy': {
+  'POST /1cdn/zndzgzt/changeRy': {
     code: 0, // 接口状态 0失败   1成功   2无权限
   },
-  'GET /cdn/zndzgzt/selectZyRyDl': {
+  'GET /1cdn/zndzgzt/selectZyRyDl': {
     code: 0, // 接口状态 0失败   1成功   2无权限
     data: {
       checkedCategory: [

@@ -56,7 +56,7 @@ const View = props => {
         personSet(payload);
         break;
       case 'move':
-        getUserInfo({number: data.number});
+        getUserInfo({number: data.number}, data);
         break;
     }
   }
