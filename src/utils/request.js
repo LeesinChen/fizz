@@ -64,6 +64,8 @@ request.interceptors.response.use(async (response) => {
   const data = await response.clone().json();
 
 
+  return response;
+
   // if (data.code === 401 || data.Code === 401) {
   //   window.location.href = '/login'
   // } else {

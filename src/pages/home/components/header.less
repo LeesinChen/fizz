@@ -1,17 +1,44 @@
 @import "../../../theme/vars";
 
 .header{
+  height: 60px;
   width: 100%;
-  box-shadow: 0 0 5px rgba(0,0,0,0.3);
-  background: #fff;
+  position: relative;
+  top: 0;
+  left: 0;
+  z-index: 99;
+  box-shadow: 0 0 5px rgba(0,0,0,0.8);
+  background: #3fbdf7;
   box-sizing: border-box;
   padding: 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   overflow: hidden;
+  .dv1,.dv2,.dv3{
+    width: 6px;
+    height: 30px;
+    float: left;
+    margin-right: 8px;
+    border-radius: 4px;
+  }
+  .dv1{
+    background: #54e602;
+  }
+  .dv2{
+    background: #f5ff02;
+  }
+  .dv3{
+    background: #f50;
+  }
   div{
     display: flex;
     align-items: center;
   };
+  .logo{
+    height: 40px;
+    img{
+      height: 40px;
+    }
+  }
 }

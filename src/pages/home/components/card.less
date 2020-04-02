@@ -1,6 +1,5 @@
 .card{
   width: 100%;
-  min-width: 330px;
   height: 100%;
   background: #fff;
   border-radius: 4px;
@@ -36,3 +35,22 @@
     }
   }
 }
+
+.cardActive{
+  box-shadow: 1px 1px 15px 1px rgb(79, 153, 255) !important;
+  animation: cardAni 1s ease 1;
+}
+
+@keyframes cardAni {
+  0%{
+    transform: scale(1);
+  }
+  50%{
+    transform: scale(1.1);
+  }
+  100%{
+    transform: scale(1);
+  }
+}
+
+

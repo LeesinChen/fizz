@@ -29,7 +29,13 @@ export default {
       },
     }],
   ],
-  proxy: {},
+  proxy: {
+    '/cdn': {
+      target: 'http://2y63d96310.wicp.vip:34537/',
+      changeOrigin: true,
+      pathRewrite: { '^/cdn': '' },
+    },
+  },
   uglifyJSOptions(opts) {
     opts.uglifyOptions.compress.warnings = false;
     opts.uglifyOptions.compress.drop_debugger = true;

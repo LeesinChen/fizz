@@ -1,14 +1,25 @@
 import React, {useState} from 'react'
 import styles from './index.less';
-import { formatMessage } from 'umi-plugin-locale';
+import { connect } from 'dva';
 
-const View = props => {
+import Loading from '@/components/Loading';
+
+const Index = props => {
+
+  const {
+    location,
+    loading,
+    dispatch,
+    globalModel,
+    route: { routes }
+  } = props
 
   return (
     <div className={styles.container}>
+      <Loading visible={loading.global} />
       {props.children}
     </div>
   );
 }
 
-export default View
+export default connect(({globalModel, loading}) => ({globalModel, loading}))(Index);

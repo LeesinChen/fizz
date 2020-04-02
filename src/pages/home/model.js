@@ -1,166 +1,42 @@
 import registerServer from '@/utils/registerServer'
 import api from '@/utils/api';
 import request from '@/utils/request';
+import {notification} from 'antd';
+import router from 'umi/router';
 
 const {
   home_list,
+  find_list,
+  user_move
 } = api
 
 const _service = registerServer({
   getList: {
     url: home_list,
+    method: 'get'
+  },
+  find: {
+    url: find_list,
+    method: 'get'
+  },
+  move: {
+    url: user_move,
     method: 'post'
-  },
+  }
 }, request)
-
-const dataSource = [
-  {
-    id: 1,
-    name: '张三',
-    gender: 1,
-    number: 'A001',
-    sNumber: '12345'
-  },
-  {
-    id: 1,
-    name: '慕容阿呆',
-    gender: 2,
-    number: 'A001',
-    sNumber: '12345'
-  },
-  {
-    id: 1,
-    name: '刘能',
-    gender: 1,
-    number: 'A001',
-    sNumber: '12345'
-  },
-  {
-    id: 1,
-    name: '王小二',
-    gender: 2,
-    number: 'A001',
-    sNumber: '12345'
-  },
-  {
-    id: 1,
-    name: '张三',
-    gender: 2,
-    number: 'A001',
-    sNumber: '12345'
-  },
-  {
-    id: 1,
-    name: '张三',
-    gender: 1,
-    number: 'A001',
-    sNumber: '12345'
-  },
-  {
-    id: 1,
-    name: '张三',
-    gender: 1,
-    number: 'A001',
-    sNumber: '12345'
-  },
-  {
-    id: 1,
-    name: '张三',
-    gender: 1,
-    number: 'A001',
-    sNumber: '12345'
-  },
-  {
-    id: 1,
-    name: '张三',
-    gender: 1,
-    number: 'A001',
-    sNumber: '12345'
-  },
-  {
-    id: 1,
-    name: '张三',
-    gender: 1,
-    number: 'A001',
-    sNumber: '12345'
-  },
-]
 
 const Model = {
   namespace: 'homeModel',
   state: {
-    list: [
-      {
-        title: '妇科',
-        dataSource: [],
-        total: 0,
-        man: 0,
-        woman: 0
-      },
-      {
-        title: '外科',
-        dataSource: dataSource,
-        total: 60,
-        man: 22,
-        woman: 38
-      },
-      {
-        title: '一般情况',
-        dataSource: dataSource,
-        total: 58,
-        man: 20,
-        woman: 38
-      },
-      {
-        title: '眼科',
-        dataSource: dataSource,
-        total: 98,
-        man: 40,
-        woman: 58
-      },
-      {
-        title: '耳鼻喉科',
-        dataSource: dataSource,
-        total: 58,
-        man: 20,
-        woman: 38
-      },
-      {
-        title: '检验科',
-        dataSource: dataSource,
-        total: 58,
-        man: 20,
-        woman: 38
-      },
-      {
-        title: '放射科',
-        dataSource: dataSource,
-        total: 58,
-        man: 20,
-        woman: 38
-      },
-      {
-        title: 'B超',
-        dataSource: dataSource,
-        total: 58,
-        man: 20,
-        woman: 38
-      },
-      {
-        title: '心电图',
-        dataSource: dataSource,
-        total: 58,
-        man: 20,
-        woman: 38
-      },
-      {
-        title: '胃镜检测',
-        dataSource: dataSource,
-        total: 58,
-        man: 20,
-        woman: 38
-      },
-    ],
+    total: 0, // 所有科室检查总人数
+    checkedTotal: 0, // 所有科室已检查总人数
+    checkedMan: 0, // 所有科室已检查男性
+    checkedWoman: 0, // 所有科室已检查女性
+    spareTotal: 0,
+    spareMan: 0, // 所有科室未检查男性
+    spareWoman: 0, // 所有科室未检查男性
+    list: [],
+    alert: false,
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -168,19 +44,67 @@ const Model = {
         if (location.pathname === '/' || location.pathname === '/home') {
           dispatch({
             type: 'getList',
-            payload: {
-              page: 1,
-              pageSize: 10,
-              ...location.query
-            }
           })
         }
       })
     }
   },
   effects: {
+    *move({ payload = {} }, { call, put }) {
+      const res = yield call(_service.move, payload);
+      if (res.code == 1 ) {
+        notification.success({
+          message: "更新成功！",
+          duration: 1,
+        })
+        router.replace({
+          pathname: '/home',
+        })
+      } else {
+        throw {
+          errorMessage: res.errorMessage
+        }
+      }
+    },
+    *find({ payload = {} }, { call, put }) {
+      const res = yield call(_service.find, payload);
+      if (res.code == 1 ) {
+        yield put({
+          type: 'updateState',
+          payload: {
+            userInfo: res.data,
+            alert: true,
+            categoryId: res.data.categoryId,
+            searchId: res.data.id
+          }
+        })
+      } else {
+        throw {
+          errorMessage: res.errorMessage
+        }
+      }
+    },
     *getList({ payload = {} }, { call, put }) {
       const res = yield call(_service.getList, payload);
+      if (res.code == 1 ) {
+        yield put({
+          type: 'updateState',
+          payload: {
+            total: +res.total, // 所有科室检查总人数
+            spareTotal: +res.spareTotal,
+            checkedTotal: +res.checkedTotal, // 所有科室已检查总人数
+            checkedMan: +res.checkedMan, // 所有科室已检查男性
+            checkedWoman: +res.checkedWoman, // 所有科室已检查女性
+            spareMan: +res.spareMan, // 所有科室未检查男性
+            spareWoman: +res.spareWoman, // 所有科室未检查男性
+            list: res.data.filter(d => d.id)
+          }
+        })
+      } else {
+        throw {
+          errorMessage: res.errorMessage
+        }
+      }
     },
   },
   reducers: {
